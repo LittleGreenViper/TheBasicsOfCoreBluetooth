@@ -1,8 +1,8 @@
 ![Icon](../img/icon.png)
 
-###[The SDKs](https://github.com/LittleGreenViper/TheBasicsOfCoreBluetooth/tree/master/SDK-src)
+#[The SDKs](https://github.com/LittleGreenViper/TheBasicsOfCoreBluetooth/tree/master/SDK-src)
 
-####Common Core
+## Common Core
 
 The entirety of [the SDK code](https://github.com/LittleGreenViper/TheBasicsOfCoreBluetooth/tree/master/SDK-src/src) is shared between platforms, with the exception of [this file](https://github.com/LittleGreenViper/TheBasicsOfCoreBluetooth/blob/master/SDK-src/src/internal/ITCB_SDK_Peripheral_internal.swift), which is only included in the [MacOS](https://github.com/LittleGreenViper/TheBasicsOfCoreBluetooth/tree/master/SDK-src/ITCB_SDK_Mac) and [iOS/iPadOS](https://github.com/LittleGreenViper/TheBasicsOfCoreBluetooth/tree/master/SDK-src/ITCB_SDK_iOS) targets (it implements Peripheral Mode, which is not supported in TV or Watch).
 
