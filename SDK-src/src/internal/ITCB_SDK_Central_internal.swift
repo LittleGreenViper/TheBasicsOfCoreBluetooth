@@ -103,7 +103,7 @@ internal extension ITCB_SDK_Central {
 // MARK: - ITCB_SDK_Device_PeripheralDelegate Methods -
 /* ###################################################################################################################################### */
 extension ITCB_SDK_Central: ITCB_SDK_Device_PeripheralDelegate {
-    func peripheralServicesUpdated(_ inPeripheral: ITCB_SDK_Device_Peripheral) {
+    internal func peripheralServicesUpdated(_ inPeripheral: ITCB_SDK_Device_Peripheral) {
         _sendDeviceDiscoveredMessageToAllObservers(device: inPeripheral)
     }
 }

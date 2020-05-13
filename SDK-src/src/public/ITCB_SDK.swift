@@ -154,6 +154,7 @@ public class ITCB_SDK_Central: ITCB_SDK, ITCB_SDK_Central_Protocol {
     }
 }
 
+// MARK: Only available for Mac OS X or iOS/iPadOS
 #if os(OSX) || os(iOS)
     /* ###################################################################################################################################### */
     // MARK: - Main SDK Peripheral Variant Interface Class -
@@ -166,6 +167,12 @@ public class ITCB_SDK_Central: ITCB_SDK, ITCB_SDK_Central_Protocol {
     public class ITCB_SDK_Peripheral: ITCB_SDK, ITCB_SDK_Peripheral_Protocol {
         /* ################################################################## */
         /**
+         This is a reference to the Central device that the instance is being "managed" by.
+         */
+        public var central: ITCB_Device_Central_Protocol!
+        
+        /* ################################################################## */
+        /**
          Factory function for instantiating Peripherals.
          
          This is internal, but needs to be declared here. Awkward, I know.
@@ -173,12 +180,6 @@ public class ITCB_SDK_Central: ITCB_SDK, ITCB_SDK_Central_Protocol {
          - returns: A new instance of a Peripheral SDK.
          */
         internal class func createInstance() -> ITCB_SDK_Protocol? { ITCB_SDK_Peripheral() }
-        
-        /* ################################################################## */
-        /**
-         This is a reference to the Central device that the instance is being "managed" by.
-         */
-        public var central: ITCB_Device_Central_Protocol!
         
         /* ################################################################## */
         /**

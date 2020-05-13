@@ -47,13 +47,13 @@ extension ITCB_SDK {
     /**
       Any error condition associated with this instance. It may be nil.
      */
-    var _error: ITCB_Errors? { nil }
+    internal var _error: ITCB_Errors? { nil }
     
     /* ################################################################## */
     /**
      This is a base class cast of the manager object that wil be attached to this instance.
      */
-    var managerInstance: CBManager! {
+    internal var managerInstance: CBManager! {
         _managerInstance as? CBManager
     }
 
@@ -61,7 +61,7 @@ extension ITCB_SDK {
     /**
      This is true, if Core Bluetooth reports that the device Bluetooth interface is powered on and available for use.
      */
-    var _isCoreBluetoothPoweredOn: Bool {
+    internal var _isCoreBluetoothPoweredOn: Bool {
         guard let manager = managerInstance else { return false }
         return .poweredOn == manager.state
     }
@@ -73,7 +73,7 @@ extension ITCB_SDK {
      - parameter inObserver: The Observer Instance to add.
      - returns: The newly-assigned UUID. Nil, if the observer was not added.
      */
-    func _addObserver(_ inObserver: ITCB_Observer_Protocol) -> UUID! {
+    internal func _addObserver(_ inObserver: ITCB_Observer_Protocol) -> UUID! {
         if !isObserving(inObserver) {
             observers.append(inObserver)
             observers[observers.count - 1].uuid = UUID()    // This assigns a concrete UUID for use in comparing for removal and testing.
@@ -88,7 +88,7 @@ extension ITCB_SDK {
      
      - parameter inObserver: The Observer Instance to remove.
      */
-    func _removeObserver(_ inObserver: ITCB_Observer_Protocol) {
+    internal func _removeObserver(_ inObserver: ITCB_Observer_Protocol) {
         // There's a number of ways to do this. This way works fine.
         for index in 0..<observers.count where inObserver.uuid == observers[index].uuid {
             observers.remove(at: index)
@@ -104,7 +104,7 @@ extension ITCB_SDK {
     
      - returns: True, if the observer is currently in the list of SDK observers.
      */
-    func _isObserving(_ inObserver: ITCB_Observer_Protocol) -> Bool {
+    internal func _isObserving(_ inObserver: ITCB_Observer_Protocol) -> Bool {
         for observer in observers where inObserver.uuid == observer.uuid {
             return true
         }
@@ -118,7 +118,7 @@ extension ITCB_SDK {
      
      - parameter error: The error that we are sending.
      */
-    func _sendErrorMessageToAllObservers(error inError: ITCB_Errors) {
+    internal func _sendErrorMessageToAllObservers(error inError: ITCB_Errors) {
         observers.forEach {
             $0.errorOccurred(inError, sdk: self)
         }
