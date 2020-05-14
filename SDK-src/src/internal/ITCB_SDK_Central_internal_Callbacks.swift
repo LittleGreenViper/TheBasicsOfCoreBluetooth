@@ -114,9 +114,36 @@ extension ITCB_SDK_Central: CBCentralManagerDelegate {
 }
 
 /* ###################################################################################################################################### */
-// MARK: - CBPeripheralDelegate Conformance -
+// MARK: - CBPeripheralDelegate Conformance, and sendQuestion Method -
 /* ###################################################################################################################################### */
-extension ITCB_SDK_Device_Peripheral: CBPeripheralDelegate {
+extension ITCB_SDK_Device_Peripheral {
+    /* ################################################################## */
+    /**
+     This sends a question to the Peripheral device, using Core Bluetooth.
+     
+     - parameter inQuestion: The question to be asked.
+     */
+    public func sendQuestion(_ inQuestion: String) {
+        question = nil
+        if  let data = inQuestion.data(using: .utf8),
+            let peripheral = _peerInstance as? CBPeripheral,
+            let service = peripheral.services?[_static_ITCB_SDK_8BallServiceUUID.uuidString],
+            let questionCharacteristic = service.characteristics?[_static_ITCB_SDK_8BallService_Question_UUID.uuidString],
+            let answerCharacteristic = service.characteristics?[_static_ITCB_SDK_8BallService_Answer_UUID.uuidString] {
+            _timeoutTimer = Timer.scheduledTimer(withTimeInterval: _timeoutLengthInSeconds, repeats: false) { [unowned self] (_) in
+                self._timeoutTimer = nil
+                self.owner?._sendErrorMessageToAllObservers(error: .sendFailed(ITCB_RejectionReason.deviceOffline))
+            }
+            _interimQuestion = inQuestion
+            peripheral.setNotifyValue(true, for: answerCharacteristic)
+            peripheral.writeValue(data, for: questionCharacteristic, type: .withResponse)
+        } else if inQuestion.data(using: .utf8) == nil {
+            self.owner?._sendErrorMessageToAllObservers(error: .sendFailed(ITCB_RejectionReason.unknown(nil)))
+        } else {
+            self.owner?._sendErrorMessageToAllObservers(error: .sendFailed(ITCB_RejectionReason.deviceOffline))
+        }
+    }
+
     /* ################################################################## */
     /**
      Called after the Peripheral has discovered Services.
