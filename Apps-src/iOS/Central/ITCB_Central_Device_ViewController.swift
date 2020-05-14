@@ -71,7 +71,7 @@ class ITCB_Central_Device_ViewController: ITCB_Base_ViewController {
      This makes sure that we don't leave a dead link in the SDK observer pool.
      */
     deinit {
-        deviceSDKInstance.removeObserver(self)
+        deviceSDKInstance?.removeObserver(self)
     }
 }
 

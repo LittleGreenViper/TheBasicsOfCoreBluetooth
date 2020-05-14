@@ -60,7 +60,7 @@ class ITCB_TVOS_Central_ViewController: ITCB_Base_ViewController {
      We remove ourselves from the observer pool.
      */
     deinit {
-        deviceSDKInstance.removeObserver(self)
+        deviceSDKInstance?.removeObserver(self)
     }
 }
 

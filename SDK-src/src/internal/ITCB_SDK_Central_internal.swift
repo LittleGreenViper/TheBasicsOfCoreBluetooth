@@ -111,7 +111,7 @@ internal protocol ITCB_SDK_Device_PeripheralDelegate: class {
 /**
  We need to keep in mind that Peripheral objects are actually owned by Central SDK instances.
  */
-internal class ITCB_SDK_Device_Peripheral: ITCB_SDK_Device, ITCB_Device_Peripheral_Protocol {
+internal class ITCB_SDK_Device_Peripheral: ITCB_SDK_Device, ITCB_Device_Peripheral_Protocol, CBPeripheralDelegate {
     /// This is how long we have for a timeout, in seconds.
     internal let _timeoutLengthInSeconds: TimeInterval = 1.0
     
@@ -187,31 +187,6 @@ internal class ITCB_SDK_Device_Peripheral: ITCB_SDK_Device, ITCB_Device_Peripher
      */
     public func rejectConnectionBecause(_ inReason: ITCB_RejectionReason! = .unknown(nil)) {
         owner?._sendErrorMessageToAllObservers(error: .coreBluetooth(inReason))
-    }
-
-    /* ################################################################## */
-    /**
-     This sends a question to the Peripheral device, using Core Bluetooth.
-     
-     - parameter inQuestion: The question to be asked.
-     */
-    public func sendQuestion(_ inQuestion: String) {
-        question = nil
-        if  let data = inQuestion.data(using: .utf8),
-            let peripheral = _peerInstance as? CBPeripheral,
-            let service = peripheral.services?[_static_ITCB_SDK_8BallServiceUUID.uuidString],
-            let questionCharacteristic = service.characteristics?[_static_ITCB_SDK_8BallService_Question_UUID.uuidString],
-            let answerCharacteristic = service.characteristics?[_static_ITCB_SDK_8BallService_Answer_UUID.uuidString] {
-            _timeoutTimer = Timer.scheduledTimer(withTimeInterval: _timeoutLengthInSeconds, repeats: false) { [unowned self] (_) in
-                self._timeoutTimer = nil
-                self.owner?._sendErrorMessageToAllObservers(error: .sendFailed(ITCB_RejectionReason.deviceOffline))
-            }
-            _interimQuestion = inQuestion
-            peripheral.setNotifyValue(true, for: answerCharacteristic)
-            peripheral.writeValue(data, for: questionCharacteristic, type: .withResponse)
-        } else {
-            self.owner?._sendErrorMessageToAllObservers(error: .sendFailed(ITCB_RejectionReason.deviceOffline))
-        }
     }
     
     /* ################################################################## */
