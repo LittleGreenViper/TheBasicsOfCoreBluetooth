@@ -46,12 +46,6 @@
 		D49AE311240848680002D53C /* ITCB_Base_InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49AE310240848680002D53C /* ITCB_Base_InterfaceController.swift */; };
 		D49CABD7246B6426005ECD6B /* Bluetooth 8-Ball On Watch App Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = D40B434E23F381F200CFE862 /* Bluetooth 8-Ball On Watch App Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D4AED472240419CC00FE4542 /* ITCB_Central_Device_ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AED470240419CC00FE4542 /* ITCB_Central_Device_ViewController.swift */; };
-		D4B683EA246C3CE100FD400B /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4B683E9246C3CE100FD400B /* Warnings.xcconfig */; };
-		D4B683EB246C3CE100FD400B /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4B683E9246C3CE100FD400B /* Warnings.xcconfig */; };
-		D4B683EC246C3CE100FD400B /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4B683E9246C3CE100FD400B /* Warnings.xcconfig */; };
-		D4B683ED246C3CE100FD400B /* Warnings.xcconfig in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = D4B683E9246C3CE100FD400B /* Warnings.xcconfig */; };
-		D4B683EE246C3CE100FD400B /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4B683E9246C3CE100FD400B /* Warnings.xcconfig */; };
-		D4B683EF246C3CE100FD400B /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4B683E9246C3CE100FD400B /* Warnings.xcconfig */; };
 		D4B7AE7923F38834006C9076 /* ITCB_Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48CEDD723F2CB180083F1A4 /* ITCB_Utilities.swift */; };
 		D4BA633523FDE12F0086EF9F /* ITCB_About_ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BA633323FDE12F0086EF9F /* ITCB_About_ViewController.swift */; };
 		D4BC059823F345ED008266BC /* ITCB_Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48CEDD723F2CB180083F1A4 /* ITCB_Utilities.swift */; };
@@ -113,6 +107,27 @@
 			remoteGlobalIDString = D40B434D23F381F200CFE862;
 			remoteInfo = "Bluetooth 8-Ball On Watch App Extension";
 		};
+		D4B01262246D99E20030EF15 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D4FC12B523F7363A00C3ED12 /* ITCB.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D41DD5002401D71B00A99087;
+			remoteInfo = ITCB_SDK_IOS;
+		};
+		D4B01264246D99F00030EF15 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D4FC12B523F7363A00C3ED12 /* ITCB.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D40FF5CB2406A66100349E77;
+			remoteInfo = ITCB_SDK_TVOS;
+		};
+		D4B01266246D99FA0030EF15 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D4FC12B523F7363A00C3ED12 /* ITCB.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D49AE2FB240841A00002D53C;
+			remoteInfo = ITCB_SDK_Watch;
+		};
 		D4FC12BA23F7363A00C3ED12 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D4FC12B523F7363A00C3ED12 /* ITCB.xcodeproj */;
@@ -137,7 +152,6 @@
 			dstSubfolderSpec = 16;
 			files = (
 				D40B434023F381F100CFE862 /* Bluetooth 8-Ball On Watch App.app in Embed Watch Content */,
-				D4B683ED246C3CE100FD400B /* Warnings.xcconfig in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -777,6 +791,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				D4B01267246D99FA0030EF15 /* PBXTargetDependency */,
 			);
 			name = "Bluetooth 8-Ball On Watch App Extension";
 			productName = "Watch WatchKit Extension";
@@ -796,6 +811,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				D4B01265246D99F00030EF15 /* PBXTargetDependency */,
 			);
 			name = "Bluetooth 8-Ball On TV";
 			productName = "ITCB-TV";
@@ -815,6 +831,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				D4B01263246D99E20030EF15 /* PBXTargetDependency */,
 			);
 			name = "Bluetooth 8-Ball On Mobile";
 			productName = iOS;
@@ -941,7 +958,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4950AB52402E08B00D9789B /* SharedAssets.xcassets in Resources */,
-				D4B683EE246C3CE100FD400B /* Warnings.xcconfig in Resources */,
 				D40B437623F3836900CFE862 /* Assets.xcassets in Resources */,
 				D4DBD5CB23F41F80001C9DE5 /* InfoPlist.strings in Resources */,
 				D40B437523F3836900CFE862 /* Interface.storyboard in Resources */,
@@ -953,7 +969,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D420990D2409BEE900C4CCE5 /* Localizable.strings in Resources */,
-				D4B683EF246C3CE100FD400B /* Warnings.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -966,7 +981,6 @@
 				D4195FA223F454200031A99E /* LaunchScreen.storyboard in Resources */,
 				D4195FA423F454200031A99E /* Assets.xcassets in Resources */,
 				D4195FA323F454200031A99E /* Main.storyboard in Resources */,
-				D4B683EC246C3CE100FD400B /* Warnings.xcconfig in Resources */,
 				D4950AB42402E08B00D9789B /* SharedAssets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -980,7 +994,6 @@
 				D4BC05A123F346AB008266BC /* Assets.xcassets in Resources */,
 				D4950AB32402E08B00D9789B /* SharedAssets.xcassets in Resources */,
 				D4BC05AD23F346B7008266BC /* LaunchScreen.storyboard in Resources */,
-				D4B683EB246C3CE100FD400B /* Warnings.xcconfig in Resources */,
 				D4BC05AA23F346B7008266BC /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -992,7 +1005,6 @@
 				D4BC05B423F347FB008266BC /* Localizable.strings in Resources */,
 				D452A2F423F0DB8500016D71 /* Main.storyboard in Resources */,
 				D4950AB22402E08B00D9789B /* SharedAssets.xcassets in Resources */,
-				D4B683EA246C3CE100FD400B /* Warnings.xcconfig in Resources */,
 				D452A2F323F0DB8500016D71 /* InfoPlist.strings in Resources */,
 				D4E6777F23EEF4C40066B0C0 /* Assets.xcassets in Resources */,
 			);
@@ -1146,6 +1158,21 @@
 			isa = PBXTargetDependency;
 			target = D40B434D23F381F200CFE862 /* Bluetooth 8-Ball On Watch App Extension */;
 			targetProxy = D49CABD8246B6426005ECD6B /* PBXContainerItemProxy */;
+		};
+		D4B01263246D99E20030EF15 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ITCB_SDK_IOS;
+			targetProxy = D4B01262246D99E20030EF15 /* PBXContainerItemProxy */;
+		};
+		D4B01265246D99F00030EF15 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ITCB_SDK_TVOS;
+			targetProxy = D4B01264246D99F00030EF15 /* PBXContainerItemProxy */;
+		};
+		D4B01267246D99FA0030EF15 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ITCB_SDK_Watch;
+			targetProxy = D4B01266246D99FA0030EF15 /* PBXContainerItemProxy */;
 		};
 		D4FC12BF23F7364400C3ED12 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
