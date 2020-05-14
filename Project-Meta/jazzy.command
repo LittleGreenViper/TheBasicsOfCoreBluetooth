@@ -10,6 +10,7 @@ jazzy   --readme ./README.md \
         --github_url https://github.com/LittleGreenViper/Magic8Ball \
         --title Magic8Ball\ Public\ API\ Doumentation \
         --theme fullwidth \
+        --exclude=/*/internal* \
         --min_acl public \
         --build-tool-arguments -scheme,"ITCB_SDK_Mac (Framework)"
 cp img/*.* docs/img/

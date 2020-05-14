@@ -76,14 +76,6 @@
             </ul>
           </li>
           <li class="nav-group-name">
-            <a class="nav-group-name-link" href="Extensions.html">Extensions</a>
-            <ul class="nav-group-tasks">
-              <li class="nav-group-task">
-                <a class="nav-group-task-link" href="Extensions/Array.html">Array</a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-group-name">
             <a class="nav-group-name-link" href="Protocols.html">Protocols</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
@@ -131,6 +123,51 @@
           <div class="section-content">
             <div class="task-group">
               <div class="task-name-container">
+                <a name="/Main%20SDK%20Interface%20Base%20Class"></a>
+                <a name="//apple_ref/swift/Section/Main SDK Interface Base Class" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Main%20SDK%20Interface%20Base%20Class"></a>
+                  <h3 class="section-name"><p>Main SDK Interface Base Class</p>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@ITCB_SDK_Mac@objc(cs)ITCB_SDK"></a>
+                    <a name="//apple_ref/swift/Class/ITCB_SDK" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@ITCB_SDK_Mac@objc(cs)ITCB_SDK">ITCB_SDK</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is the base implementation of the ITCB protocol contract. The base doesn&rsquo;t need to be bound to a protocol, as the specializations will be.</p>
+
+<p>It is a Swift class, and this is the &ldquo;base&rdquo; class, meant to be specialized for Central and Peripheral variants.</p>
+
+<p>This class needs to derive from NSObject, as its subclasses are Core Bluetooth delegate classes.</p>
+
+                        <a href="Classes/ITCB_SDK.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ITCB_SDK</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/ITCB_SDK_Protocol.html">ITCB_SDK_Protocol</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
                 <a name="/Main%20SDK%20Central%20Variant%20Interface%20Class"></a>
                 <a name="//apple_ref/swift/Section/Main SDK Central Variant Interface Class" class="dashAnchor"></a>
                 <div class="section-name-container">
@@ -162,7 +199,6 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ITCB_SDK_Central</span> <span class="p">:</span> <span class="kt"><a href="Classes/ITCB_SDK.html">ITCB_SDK</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/ITCB_SDK_Central_Protocol.html">ITCB_SDK_Central_Protocol</a></span></code></pre>
-<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">ITCB_SDK_Central</span><span class="p">:</span> <span class="kt">CBCentralManagerDelegate</span></code></pre>
 
                         </div>
                       </div>
@@ -206,50 +242,6 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ITCB_SDK_Peripheral</span> <span class="p">:</span> <span class="kt"><a href="Classes/ITCB_SDK.html">ITCB_SDK</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/ITCB_SDK_Peripheral_Protocol.html">ITCB_SDK_Peripheral_Protocol</a></span></code></pre>
-<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">ITCB_SDK_Peripheral</span><span class="p">:</span> <span class="kt">CBPeripheralManagerDelegate</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/Main%20SDK%20Interface%20Base%20Class"></a>
-                <a name="//apple_ref/swift/Section/Main SDK Interface Base Class" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/Main%20SDK%20Interface%20Base%20Class"></a>
-                  <h3 class="section-name"><p>Main SDK Interface Base Class</p>
-</h3>
-                </div>
-              </div>
-              <ul class="item-container">
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:@M@ITCB_SDK_Mac@objc(cs)ITCB_SDK"></a>
-                    <a name="//apple_ref/swift/Class/ITCB_SDK" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@ITCB_SDK_Mac@objc(cs)ITCB_SDK">ITCB_SDK</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>This is the implementation of the ITCB protocol contract. The base doesn&rsquo;t need to be bound to a protocol, as the specializations will be.</p>
-
-<p>It is a Swift class, and this is the &ldquo;base&rdquo; class, meant to be specialized for Central and Peripheral variants.</p>
-
-                        <a href="Classes/ITCB_SDK.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ITCB_SDK</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/ITCB_SDK_Protocol.html">ITCB_SDK_Protocol</a></span></code></pre>
 
                         </div>
                       </div>
@@ -264,7 +256,7 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2020 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2020-05-13)</p>
+      <p>&copy; 2020 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2020-05-14)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

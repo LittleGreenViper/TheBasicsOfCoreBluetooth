@@ -103,7 +103,7 @@ internal extension ITCB_SDK_Central {
 // MARK: - ITCB_SDK_Device_PeripheralDelegate Methods -
 /* ###################################################################################################################################### */
 extension ITCB_SDK_Central: ITCB_SDK_Device_PeripheralDelegate {
-    func peripheralServicesUpdated(_ inPeripheral: ITCB_SDK_Device_Peripheral) {
+    internal func peripheralServicesUpdated(_ inPeripheral: ITCB_SDK_Device_Peripheral) {
         _sendDeviceDiscoveredMessageToAllObservers(device: inPeripheral)
     }
 }
@@ -250,6 +250,16 @@ internal class ITCB_SDK_Device_Peripheral: ITCB_SDK_Device, ITCB_Device_Peripher
         set {
             super.name = newValue
         }
+    }
+    
+    /* ################################################################## */
+    /**
+     This allows the user of an SDK to reject a connection attempt by another device (either a question or an answer).
+     
+     - parameter inReason: The reason for the rejection. It may be nil. If nil, .unknownError is assumed, with no error associated value.
+     */
+    public func rejectConnectionBecause(_ inReason: ITCB_RejectionReason! = .unknown(nil)) {
+        owner._sendErrorMessageToAllObservers(error: .coreBluetooth(inReason))
     }
 
     /* ################################################################## */

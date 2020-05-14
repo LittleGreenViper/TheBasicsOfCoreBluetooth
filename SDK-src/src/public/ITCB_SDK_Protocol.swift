@@ -181,7 +181,7 @@ public protocol ITCB_Device_Protocol {
      
      The reason that we have this, as opposed to a function return from the observer, is because I think observer should be one-way. Outgoing only.
      
-     - parameter reason: The reason for the rejection. It may be nil. If nil, .unkownError is assumed, with no error associated value.
+     - parameter reason: The reason for the rejection. It may be nil. If nil, .unknownError is assumed, with no error associated value.
      */
     func rejectConnectionBecause(_ reason: ITCB_RejectionReason!)
 }
@@ -494,7 +494,7 @@ public enum ITCB_RejectionReason: Error {
     
     /* ################################################################## */
     /**
-     This will return any associated value (unkown error only has one). It may be nil.
+     This will return any associated value (unknown error only has one). It may be nil.
     */
     var associatedValue: Error? {
         var ret: Error!

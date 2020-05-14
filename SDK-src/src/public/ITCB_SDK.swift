@@ -20,27 +20,29 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 Little Green Viper Software Development LLC: https://littlegreenviper.com
 */
 
-import Foundation   // Needed for the debug test.
+import Foundation   // Needed for NSObject.
 
 /* ###################################################################################################################################### */
 // MARK: - Main SDK Interface Base Class -
 /* ###################################################################################################################################### */
 /**
- This is the implementation of the ITCB protocol contract. The base doesn't need to be bound to a protocol, as the specializations will be.
+ This is the base implementation of the ITCB protocol contract. The base doesn't need to be bound to a protocol, as the specializations will be.
  
  It is a Swift class, and this is the "base" class, meant to be specialized for Central and Peripheral variants.
+ 
+ This class needs to derive from NSObject, as its subclasses are Core Bluetooth delegate classes.
  */
 public class ITCB_SDK: NSObject, ITCB_SDK_Protocol {
     /* ################################################################## */
     /**
      Factory function for instantiating Peripherals.
      
-     - parameter isCentral: This is true, if we want a Central instance, or false, for a Peripheral.
+     - parameter isCentral: This is true, if we want a Central instance, or false, for a Peripheral. Default is true.
      
      - returns: An instance of the SDK for use by the user.
      */
-    public class func createInstance(isCentral inIsCentral: Bool) -> ITCB_SDK_Protocol? {
-        #if os(OSX) || os(iOS)
+    public class func createInstance(isCentral inIsCentral: Bool = true) -> ITCB_SDK_Protocol? {
+        #if os(OSX) || os(iOS)  // If MacOS or iOS, we have the option of being a Peripheral.
             return inIsCentral ? ITCB_SDK_Central.createInstance() : ITCB_SDK_Peripheral.createInstance()
         #else
             return inIsCentral ? ITCB_SDK_Central.createInstance() : nil
@@ -154,6 +156,7 @@ public class ITCB_SDK_Central: ITCB_SDK, ITCB_SDK_Central_Protocol {
     }
 }
 
+// MARK: Only available for Mac OS X or iOS/iPadOS
 #if os(OSX) || os(iOS)
     /* ###################################################################################################################################### */
     // MARK: - Main SDK Peripheral Variant Interface Class -
@@ -166,6 +169,12 @@ public class ITCB_SDK_Central: ITCB_SDK, ITCB_SDK_Central_Protocol {
     public class ITCB_SDK_Peripheral: ITCB_SDK, ITCB_SDK_Peripheral_Protocol {
         /* ################################################################## */
         /**
+         This is a reference to the Central device that the instance is being "managed" by.
+         */
+        public var central: ITCB_Device_Central_Protocol!
+        
+        /* ################################################################## */
+        /**
          Factory function for instantiating Peripherals.
          
          This is internal, but needs to be declared here. Awkward, I know.
@@ -173,12 +182,6 @@ public class ITCB_SDK_Central: ITCB_SDK, ITCB_SDK_Central_Protocol {
          - returns: A new instance of a Peripheral SDK.
          */
         internal class func createInstance() -> ITCB_SDK_Protocol? { ITCB_SDK_Peripheral() }
-        
-        /* ################################################################## */
-        /**
-         This is a reference to the Central device that the instance is being "managed" by.
-         */
-        public var central: ITCB_Device_Central_Protocol!
         
         /* ################################################################## */
         /**

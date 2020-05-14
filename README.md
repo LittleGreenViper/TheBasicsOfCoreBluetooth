@@ -41,7 +41,7 @@ There will only be one Central, but there can be more than one Peripheral.
 
 Only iOS/iPadOS and MacOS support Peripheral Mode, so those are the only app variants that can act as "question-answerers."
 
-***NOTE:** The following example images are from the iOS app, on an iPad and an iPhone.*
+***NOTE:*** *The following example images are from the iOS app, on an iPad and an iPhone.*
 
 #### The Initial Mode Selection Screen (iOS and MacOS apps Only)
 
@@ -79,7 +79,7 @@ The Peripheral will automatically return an answer, randomly selected from [the 
 
 *Figure 4: Getting the Answer*
 
-***NOTE:** In the Watch variant of the app, there is no room to enter a question, so one of 20 random questions is selected to be sent.*
+***NOTE:*** *In the Watch variant of the app, there is no room to enter a question, so one of 20 random questions is selected to be sent.*
 
 #### The Peripheral Mode Screen
 
@@ -95,4 +95,4 @@ Once a question is asked of a Peripheral, it is reported in an alert.
 
 *Figure 6: Reporting an Answer*
 
-***NOTE** The alert needs to be dismissed by the user, so there is "a bit" of user interaction in Peripheral Mode.*
+***NOTE*** *The alert needs to be dismissed by the user, so there is "a bit" of user interaction in Peripheral Mode.*
