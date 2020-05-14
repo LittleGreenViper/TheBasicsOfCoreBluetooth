@@ -26,27 +26,9 @@ import CoreBluetooth
 // MARK: - Main SDK Central Variant Interface Class -
 /* ###################################################################################################################################### */
 /**
- These are the observer notification message senders.
+ Various stored properties and things we need to declare at the start.
  */
 internal extension ITCB_SDK_Central {
-    /* ################################################################## */
-    /**
-     We override the typeless stored property with a computed one, and instantiate our manager, the first time through.
-     */
-    override var _managerInstance: Any! {
-        get {
-            if nil == super._managerInstance {
-                super._managerInstance = CBCentralManager(delegate: self, queue: nil)
-            }
-            
-            return super._managerInstance
-        }
-        
-        set {
-            super._managerInstance = newValue
-        }
-    }
-
     /* ################################################################## */
     /**
      This is a specific cast of the manager object that wil be attached to this instance.
@@ -149,7 +131,7 @@ internal class ITCB_SDK_Device_Peripheral: ITCB_SDK_Device, ITCB_Device_Peripher
     public var question: String! = nil {
         didSet {
             if nil != question {    // This is actually a little bit of a kludge. The app doesn't properly unchain the optional, but we don't want to make changes to the app.
-                owner._sendSuccessInAskingMessageToAllObservers(device: self)
+                owner?._sendSuccessInAskingMessageToAllObservers(device: self)
             }
         }
     }
@@ -158,7 +140,7 @@ internal class ITCB_SDK_Device_Peripheral: ITCB_SDK_Device, ITCB_Device_Peripher
     /// We use this opportunity to let everyone know that the question has been answered.
     public var answer: String! = nil {
         didSet {
-            owner._sendQuestionAnsweredMessageToAllObservers(device: self)
+            owner?._sendQuestionAnsweredMessageToAllObservers(device: self)
         }
     }
     
@@ -204,7 +186,7 @@ internal class ITCB_SDK_Device_Peripheral: ITCB_SDK_Device, ITCB_Device_Peripher
      - parameter inReason: The reason for the rejection. It may be nil. If nil, .unknownError is assumed, with no error associated value.
      */
     public func rejectConnectionBecause(_ inReason: ITCB_RejectionReason! = .unknown(nil)) {
-        owner._sendErrorMessageToAllObservers(error: .coreBluetooth(inReason))
+        owner?._sendErrorMessageToAllObservers(error: .coreBluetooth(inReason))
     }
 
     /* ################################################################## */
@@ -222,13 +204,13 @@ internal class ITCB_SDK_Device_Peripheral: ITCB_SDK_Device, ITCB_Device_Peripher
             let answerCharacteristic = service.characteristics?[_static_ITCB_SDK_8BallService_Answer_UUID.uuidString] {
             _timeoutTimer = Timer.scheduledTimer(withTimeInterval: _timeoutLengthInSeconds, repeats: false) { [unowned self] (_) in
                 self._timeoutTimer = nil
-                self.owner._sendErrorMessageToAllObservers(error: .sendFailed(ITCB_RejectionReason.deviceOffline))
+                self.owner?._sendErrorMessageToAllObservers(error: .sendFailed(ITCB_RejectionReason.deviceOffline))
             }
             _interimQuestion = inQuestion
             peripheral.setNotifyValue(true, for: answerCharacteristic)
             peripheral.writeValue(data, for: questionCharacteristic, type: .withResponse)
         } else {
-            self.owner._sendErrorMessageToAllObservers(error: .sendFailed(ITCB_RejectionReason.deviceOffline))
+            self.owner?._sendErrorMessageToAllObservers(error: .sendFailed(ITCB_RejectionReason.deviceOffline))
         }
     }
     

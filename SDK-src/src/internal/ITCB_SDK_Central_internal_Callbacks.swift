@@ -22,6 +22,42 @@ Little Green Viper Software Development LLC: https://littlegreenviper.com
 
 import CoreBluetooth
 
+// MARK: Various Static Constants
+
+/// This is the UUID we use for our "Magic 8-Ball" Service
+internal let _static_ITCB_SDK_8BallServiceUUID = CBUUID(string: "8E38140A-27BE-4090-8955-4FC4B5698D1E")
+/// This is the UUID for the "Question" String Characteristic
+internal let _static_ITCB_SDK_8BallService_Question_UUID = CBUUID(string: "BDD37D7A-F66A-47B9-A49C-FE29FD235A77")
+/// This is the UUID for the "Answer" String Characteristic
+internal let _static_ITCB_SDK_8BallService_Answer_UUID = CBUUID(string: "349A0D7B-6215-4E2C-A095-AF078D737445")
+/// This is the minimum signal strength for Peripheral discovery.
+internal let _static_ITCB_SDK_RSSI_Min = -60
+/// This is the maximum signal strength for Peripheral discovery.
+internal let _static_ITCB_SDK_RSSI_Max = -20
+
+/* ###################################################################################################################################### */
+// MARK: - Special Computed Property -
+/* ###################################################################################################################################### */
+extension ITCB_SDK_Central {
+    /* ################################################################## */
+    /**
+     We override the typeless stored property with a computed one, and instantiate our manager, the first time through.
+     */
+    override var _managerInstance: Any! {
+        get {
+            if super._managerInstance == nil {
+                super._managerInstance = CBCentralManager(delegate: self, queue: nil)
+            }
+            
+            return super._managerInstance
+        }
+        
+        set {
+            super._managerInstance = newValue
+        }
+    }
+}
+
 /* ###################################################################################################################################### */
 // MARK: - CBCentralManagerDelegate Conformance -
 /* ###################################################################################################################################### */
@@ -30,13 +66,13 @@ extension ITCB_SDK_Central: CBCentralManagerDelegate {
     /**
      This is called as the state changes for the Central manager object.
      
-     - parameter inCentralManager: The Central Manager instance that changed state.
+     - parameter centralManager: The Central Manager instance that changed state.
      */
-    public func centralManagerDidUpdateState(_ inCentralManager: CBCentralManager) {
-        assert(inCentralManager === managerInstance)   // Make sure that we are who we say we are...
+    public func centralManagerDidUpdateState(_ centralManager: CBCentralManager) {
+        assert(centralManager === managerInstance)   // Make sure that we are who we say we are...
         // Once we are powered on, we can start scanning.
-        if .poweredOn == inCentralManager.state {
-            inCentralManager.scanForPeripherals(withServices: [_static_ITCB_SDK_8BallServiceUUID], options: [:])
+        if .poweredOn == centralManager.state {
+            centralManager.scanForPeripherals(withServices: [_static_ITCB_SDK_8BallServiceUUID], options: nil)
         }
     }
 
@@ -45,19 +81,19 @@ extension ITCB_SDK_Central: CBCentralManagerDelegate {
      This is called as the state changes for the Central manager object.
      
      - parameters:
-        - inCentralManager: The Central Manager instance that changed state.
+        - centralManager: The Central Manager instance that changed state.
         - didDiscover: This is the Core Bluetooth Peripheral instance that was discovered.
         - advertisementData: This is the adverstiement data that was sent by the discovered Peripheral.
         - rssi: This is the signal strength of the discovered Peripheral.
      */
-    public func centralManager(_ inCentralManager: CBCentralManager, didDiscover inPeripheral: CBPeripheral, advertisementData inAdvertisementData: [String : Any], rssi inRSSI: NSNumber) {
-        assert(inCentralManager === managerInstance)    // Make sure that we are who we say we are...
-        if  !devices.contains(inPeripheral),            // Make sure that we don't already have this peripheral.
-            let peripheralName = inPeripheral.name,     // And that it is a legit Peripheral (has a name).
+    public func centralManager(_ centralManager: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi: NSNumber) {
+        assert(centralManager === managerInstance)    // Make sure that we are who we say we are...
+        if  !devices.contains(peripheral),            // Make sure that we don't already have this peripheral.
+            let peripheralName = peripheral.name,     // And that it is a legit Peripheral (has a name).
             !peripheralName.isEmpty,
-            (_static_ITCB_SDK_RSSI_Min..._static_ITCB_SDK_RSSI_Max).contains(inRSSI.intValue) { // and that we have a signal within the acceptable range.
-            devices.append(ITCB_SDK_Device_Peripheral(inPeripheral, owner: self))   // By creating this, we develop a strong reference, which will keep the CBPeripheral around.
-            inCentralManager.connect(inPeripheral, options: nil)    // We initiate a connection, which starts the voyage of discovery.
+            (_static_ITCB_SDK_RSSI_Min..._static_ITCB_SDK_RSSI_Max).contains(rssi.intValue) { // and that we have a signal within the acceptable range.
+            devices.append(ITCB_SDK_Device_Peripheral(peripheral, owner: self))   // By creating this, we develop a strong reference, which will keep the CBPeripheral around.
+            centralManager.connect(peripheral, options: nil)    // We initiate a connection, which starts the voyage of discovery.
         }
     }
     
@@ -68,11 +104,12 @@ extension ITCB_SDK_Central: CBCentralManagerDelegate {
      Once the device is connected, we can start discovering services.
      
      - parameters:
-        - inCentralManager: The Central Manager instance that changed state.
+        - centralManager: The Central Manager instance that changed state.
         - didConnect: This is the Core Bluetooth Peripheral instance that was discovered.
      */
-    public func centralManager(_ inCentralManager: CBCentralManager, didConnect inPeripheral: CBPeripheral) {
-        inPeripheral.discoverServices([_static_ITCB_SDK_8BallServiceUUID])
+    public func centralManager(_ centralManager: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        assert(centralManager === managerInstance)    // Make sure that we are who we say we are...
+        peripheral.discoverServices([_static_ITCB_SDK_8BallServiceUUID])  // Start Service discovery on our new Peripheral.
     }
 }
 
@@ -84,15 +121,22 @@ extension ITCB_SDK_Device_Peripheral: CBPeripheralDelegate {
     /**
      Called after the Peripheral has discovered Services.
      
-     - parameter inPeripheral: The Peripheral object that discovered (and now contains) the Services.
+     - parameter peripheral: The Peripheral object that discovered (and now contains) the Services.
      - parameter didDiscoverServices: Any errors that may have occurred. It may be nil.
      */
-    public func peripheral(_ inPeripheral: CBPeripheral, didDiscoverServices inError: Error?) {
+    public func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        // If we suffered an error, we simply report it, and stop caring.
+        if let error = error {
+            _timeoutTimer?.invalidate()  // Stop our timeout timer.
+            _timeoutTimer = nil
+            owner?._sendErrorMessageToAllObservers(error: ITCB_Errors.coreBluetooth(error))
+            return
+        }
         // After discovering the Service, we ask it (even though we are using an Array visitor) to discover its three Characteristics.
-        inPeripheral.services?.forEach {
+        peripheral.services?.forEach {
             // Having all 3 Characteristic UUIDs in this call, means that we should get one callback, with all 3 Characteristics set at once.
-            inPeripheral.discoverCharacteristics([_static_ITCB_SDK_8BallService_Question_UUID,
-                                                  _static_ITCB_SDK_8BallService_Answer_UUID], for: $0)
+            peripheral.discoverCharacteristics([_static_ITCB_SDK_8BallService_Question_UUID,
+                                                _static_ITCB_SDK_8BallService_Answer_UUID], for: $0)
         }
     }
     
@@ -100,13 +144,20 @@ extension ITCB_SDK_Device_Peripheral: CBPeripheralDelegate {
     /**
      Called after the Peripheral has discovered Services.
      
-     - parameter inPeripheral: The Peripheral object that discovered (and now contains) the Services.
+     - parameter peripheral: The Peripheral object that discovered (and now contains) the Services (ignored).
      - parameter didDiscoverCharacteristicsFor: The Service that had the Characteristics discovered.
      - parameter error: Any errors that may have occurred. It may be nil.
      */
-    public func peripheral(_ inPeripheral: CBPeripheral, didDiscoverCharacteristicsFor inService: CBService, error inError: Error?) {
+    public func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        // If we suffered an error, we simply report it, and stop caring.
+        if let error = error {
+            _timeoutTimer?.invalidate()  // Stop our timeout timer.
+            _timeoutTimer = nil
+            owner?._sendErrorMessageToAllObservers(error: ITCB_Errors.coreBluetooth(error))
+            return
+        }
         if _characteristicInstances.isEmpty {   // Make sure that we didn't already pick up the Characteristics (This can be called multiple times).
-            _characteristicInstances = inService.characteristics ?? []
+            _characteristicInstances = service.characteristics ?? []
             owner.peripheralServicesUpdated(self)
         }
     }
@@ -114,19 +165,26 @@ extension ITCB_SDK_Device_Peripheral: CBPeripheralDelegate {
     /* ################################################################## */
     /**
      Called when the Peripheral updates a Characteristic (the Answer).
-     The inCharacteristic.value field can be considered valid.
+     The characteristic.value field can be considered valid.
      
-     - parameter inPeripheral: The Peripheral object that discovered (and now contains) the Services.
+     - parameter peripheral: The Peripheral object that discovered (and now contains) the Services.
      - parameter didUpdateValueFor: The Characteristic that was updated.
      - parameter error: Any errors that may have occurred. It may be nil.
      */
-    public func peripheral(_ inPeripheral: CBPeripheral, didUpdateValueFor inCharacteristic: CBCharacteristic, error inError: Error?) {
-        if  let answerData = inCharacteristic.value,
+    public func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        // If we suffered an error, we simply report it, and stop caring.
+        if let error = error {
+            _timeoutTimer?.invalidate()  // Stop our timeout timer.
+            _timeoutTimer = nil
+            owner?._sendErrorMessageToAllObservers(error: ITCB_Errors.coreBluetooth(error))
+            return
+        }
+        if  let answerData = characteristic.value,
             let answerString = String(data: answerData, encoding: .utf8),
             !answerString.isEmpty {
             _timeoutTimer?.invalidate()  // Stop our timeout timer.
             _timeoutTimer = nil
-            inPeripheral.setNotifyValue(false, for: inCharacteristic)
+            peripheral.setNotifyValue(false, for: characteristic)
             answer = answerString
         }
     }
@@ -134,48 +192,37 @@ extension ITCB_SDK_Device_Peripheral: CBPeripheralDelegate {
     /* ################################################################## */
     /**
      Called when the Peripheral updates a Characteristic that we wanted written (the Question).
-     NOTE: The inCharacteristic.value field IS NOT VALID in this call. That's why we saved the _interimQuestion property.
+     NOTE: The characteristic.value field IS NOT VALID in this call. That's why we saved the _interimQuestion property.
      
-     - parameter inPeripheral: The Peripheral object that discovered (and now contains) the Services.
+     - parameter peripheral: The Peripheral object that discovered (and now contains) the Services.
      - parameter didWriteValueFor: The Characteristic that was updated.
      - parameter error: Any errors that may have occurred. It may be nil.
      */
-    public func peripheral(_ inPeripheral: CBPeripheral, didWriteValueFor inCharacteristic: CBCharacteristic, error inError: Error?) {
-        if  nil == inError {
+    public func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
+        if  nil == error {
             if let questionString = _interimQuestion {  // We should have had an interim question queued up.
                 question = questionString
             } else {
-                owner._sendErrorMessageToAllObservers(error: .sendFailed(ITCB_RejectionReason.peripheralError(nil)))
+                _timeoutTimer?.invalidate()  // Stop our timeout timer.
+                _timeoutTimer = nil
+                owner?._sendErrorMessageToAllObservers(error: .sendFailed(ITCB_RejectionReason.peripheralError(nil)))
             }
         } else {
             _timeoutTimer?.invalidate()  // Stop our timeout timer. We only need the one error.
             _timeoutTimer = nil
-            if let error = inError as? CBATTError {
+            if let error = error as? CBATTError {
                 switch error {
                 // We get an "unlikely" error only when there was no question mark, so we are safe in assuming that.
                 case CBATTError.unlikelyError:
-                    owner._sendErrorMessageToAllObservers(error: .sendFailed(ITCB_Errors.coreBluetooth(ITCB_RejectionReason.questionPlease)))
+                    owner?._sendErrorMessageToAllObservers(error: .sendFailed(ITCB_Errors.coreBluetooth(ITCB_RejectionReason.questionPlease)))
 
                 // For everything else, we simply send the error back, wrapped in the "sendFailed" error.
                 default:
-                    owner._sendErrorMessageToAllObservers(error: .sendFailed(ITCB_Errors.coreBluetooth(ITCB_RejectionReason.peripheralError(error))))
+                    owner?._sendErrorMessageToAllObservers(error: .sendFailed(ITCB_Errors.coreBluetooth(ITCB_RejectionReason.peripheralError(error))))
                 }
             } else {
-                owner._sendErrorMessageToAllObservers(error: .sendFailed(ITCB_RejectionReason.unknown(inError)))
+                owner?._sendErrorMessageToAllObservers(error: .sendFailed(ITCB_RejectionReason.unknown(error)))
             }
         }
-    }
-    
-    /* ################################################################## */
-    /**
-     Called when the Peripheral makes a change to a Service. In the case of this app, that generally means that the Peripheral was disconnected.
-     We can assume that, if we get this call, the Peripheral has been disconnected.
-     
-     - parameter inPeripheral: The Peripheral object that experienced the changed Services.
-     - parameter didModifyServices: The Services (as an Array) that were changed.
-     */
-    public func peripheral(_ inPeripheral: CBPeripheral, didModifyServices inInvalidatedServices: [CBService]) {
-        // For now, we will simply return an error, but we'll revisit this later.
-        owner._sendErrorMessageToAllObservers(error: .sendFailed(ITCB_Errors.coreBluetooth(ITCB_RejectionReason.deviceOffline)))
     }
 }

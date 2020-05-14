@@ -23,17 +23,6 @@ Little Green Viper Software Development LLC: https://littlegreenviper.com
 import Foundation
 import CoreBluetooth
 
-/// This is the UUID we use for our "Magic 8-Ball" Service
-internal let _static_ITCB_SDK_8BallServiceUUID = CBUUID(string: "8E38140A-27BE-4090-8955-4FC4B5698D1E")
-/// This is the UUID for the "Question" String Characteristic
-internal let _static_ITCB_SDK_8BallService_Question_UUID = CBUUID(string: "BDD37D7A-F66A-47B9-A49C-FE29FD235A77")
-/// This is the UUID for the "Answer" String Characteristic
-internal let _static_ITCB_SDK_8BallService_Answer_UUID = CBUUID(string: "349A0D7B-6215-4E2C-A095-AF078D737445")
-/// This is the minimum signal strength for Peripheral discovery.
-internal let _static_ITCB_SDK_RSSI_Min = -60
-/// This is the maximum signal strength for Peripheral discovery.
-internal let _static_ITCB_SDK_RSSI_Max = -20
-
 /* ###################################################################################################################################### */
 // MARK: - Main SDK Interface Base Class -
 /* ###################################################################################################################################### */
