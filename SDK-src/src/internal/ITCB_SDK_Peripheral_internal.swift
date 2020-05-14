@@ -248,7 +248,7 @@ internal class ITCB_SDK_Device_Central: ITCB_SDK_Device, ITCB_Device_Central_Pro
      - parameter inReason: The reason for the rejection. It may be nil. If nil, .unknownError is assumed, with no error associated value.
      */
     public func rejectConnectionBecause(_ inReason: ITCB_RejectionReason! = .unknown(nil)) {
-        owner._sendErrorMessageToAllObservers(error: .coreBluetooth(inReason))
+        owner?._sendErrorMessageToAllObservers(error: .coreBluetooth(inReason))
     }
 
     /* ################################################################## */
@@ -280,7 +280,7 @@ internal class ITCB_SDK_Device_Central: ITCB_SDK_Device, ITCB_Device_Central_Pro
             let answerCharacteristic = central._subscribedChar as? CBMutableCharacteristic,
             let data = inAnswer.data(using: .utf8) {
             peripheralManager.updateValue(data, for: answerCharacteristic, onSubscribedCentrals: [centralDevice])
-            owner._sendSuccessInSendingAnswerToAllObservers(device: self, answer: inAnswer, toQuestion: inToQuestion)
+            owner?._sendSuccessInSendingAnswerToAllObservers(device: self, answer: inAnswer, toQuestion: inToQuestion)
         }
         
         _question = nil // Clear out the property, so it doesn't pollute the next call.
