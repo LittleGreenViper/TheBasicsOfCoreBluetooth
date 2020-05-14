@@ -195,7 +195,9 @@ extension Array where Element == CBCharacteristic {
 // MARK: - General Device Base Class -
 /* ###################################################################################################################################### */
 /**
- This is the genaral base class for Central and Peripheral devices.
+ This is the general base class for Central and Peripheral devices.
+ 
+ It derives from NSObject, as its subclasses are Core Bluetooth delegates.
  */
 internal class ITCB_SDK_Device: NSObject {
     /// The name property to conform to the protocol.
@@ -224,17 +226,5 @@ internal class ITCB_SDK_Device: NSObject {
         }
         
         return false
-    }
-    
-    /* ################################################################## */
-    /**
-     This allows the user of an SDK to reject a connection attempt by another device (either a question or an answer).
-     
-     - parameter inReason: The reason for the rejection. It may be nil. If nil, .unkownError is assumed, with no error associated value.
-     */
-    public func rejectConnectionBecause(_ inReason: ITCB_RejectionReason! = .unknown(nil)) {
-        /* ########### */
-        // TODO: Put code in here to handle rejection.
-        /* ########### */
     }
 }

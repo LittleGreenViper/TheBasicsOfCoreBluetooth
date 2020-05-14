@@ -243,6 +243,16 @@ internal class ITCB_SDK_Device_Central: ITCB_SDK_Device, ITCB_Device_Central_Pro
     
     /* ################################################################## */
     /**
+     This allows the user of an SDK to reject a connection attempt by another device (either a question or an answer).
+     
+     - parameter inReason: The reason for the rejection. It may be nil. If nil, .unknownError is assumed, with no error associated value.
+     */
+    public func rejectConnectionBecause(_ inReason: ITCB_RejectionReason! = .unknown(nil)) {
+        owner._sendErrorMessageToAllObservers(error: .coreBluetooth(inReason))
+    }
+
+    /* ################################################################## */
+    /**
      Initializer with CBCentral
      
      - parameter inCentral: The CBCentral peer instance for this instance.
